@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports</title>
+  <link rel="stylesheet" href="report.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+ <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h1><img src="/images/Waffle N.png" alt="waffle image"> Waffle N'Fries </h1>
+      <nav class="nav-links">
+        <a href="/">🏠 Dashboard</a>
+        <a href="/billing">💵 Billing</a>
+        <a href="/product">📦 Inventory</a>
+      </nav>
+      <!-- <div class="settings-link">
+        <a href="settings.html">⚙️ Settings</a>
+      </div> -->
+    </aside>
+
+  <div class="main">
+    <div class="widget">
+      <h3> 📊 Report</h3>
+
+      <div class="form-control">
+        <label for="reportType">📑 Report Type</label>
+        <select id="reportType">
+          <option value="Sales Report">Sales Report</option>
+          <option value="Product Wise Report">Product Wise Report Monthly</option>
+          <option value="Expense Report">Expense Report</option>
+        </select>
+      </div>
+
+      <div class="form-control">
+        <label for="dateFrom">📅 From</label>
+        <input type="date" id="FromDate">
+      </div>
+
+      <div class="form-control">
+        <label for="dateTo">📅 To</label>
+        <input type="date" id="ToDate">
+      </div>
+
+      <button id="genreport" class="generate-btn" onclick="generateReport()">🚀 Generate Report</button>
+
+      <div id="reportOutput" class="output"></div>
+    </div>
+  </div>
+ 
+  </div>
+   <div id="saveLoader" style="display: none;">
+  		<img alt="" src="/images/loading-7528_128.gif">
+  </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="/report.js"></script>
+ </body>
+</html>

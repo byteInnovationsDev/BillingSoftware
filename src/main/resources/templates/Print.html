@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Retail Billing System</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://rawgit.com/saravind-k/qz-print/master/dist/qz-print.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        input { width: 90%; padding: 5px; }
+        .total-row { font-weight: bold; background-color: #f5f5f5; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        #billOutput { 
+            margin-top: 20px; 
+            white-space: pre-wrap; 
+            font-family: monospace; 
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: inline-block; width: 150px; }
+        .controls { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Retail Billing System</h1>
+    
+    <div class="form-group">
+        <label for="customerName">Customer Name:</label>
+        <input type="text" id="customerName" placeholder="Optional">
+    </div>
+    
+    <div class="form-group">
+        <label for="customerPhone">Customer Phone:</label>
+        <input type="text" id="customerPhone" placeholder="Optional">
+    </div>
+    
+    <div class="form-group">
+        <label for="paymentType">Payment Type:</label>
+        <select id="paymentType">
+            <option value="CASH">Cash</option>
+            <option value="CARD">Card</option>
+            <option value="UPI">UPI</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="orderType">Order Type:</label>
+        <select id="orderType">
+            <option value="RETAIL">Retail</option>
+            <option value="WHOLESALE">Wholesale</option>
+        </select>
+    </div>
+    
+    <h3>Items</h3>
+    <table id="itemsTable">
+        <thead>
+            <tr>
+                <th width="40%">Item Name</th>
+                <th width="15%">Price (₹)</th>
+                <th width="15%">Quantity</th>
+                <th width="15%">Total (₹)</th>
+                <th width="15%">Action</th>
+            </tr>
+        </thead>
+        <tbody id="itemsBody">
+            <!-- Items will be added here -->
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Subtotal:</td>
+                <td id="subtotal">0.00</td>
+                <td></td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Tax (18%):</td>
+                <td id="taxAmount">0.00</td>
+                <td></td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right;">Total:</td>
+                <td id="totalAmount">0.00</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div class="controls">
+        <button id="addItem">Add Item</button>
+        <button id="generateBill">Generate Bill</button>
+        <button id="printBill" disabled>Print Bill</button>
+    </div>
+    
+    <div id="billOutput"></div>
+
+    <script>
+        $(document).ready(function() {
+            let itemCounter = 0;
+            let currentBillId = null;
+            
+            // Initialize printer
+            initPrinter();
+            
+            // Add item row
+            $('#addItem').click(function() {
+                addNewItemRow();
+            });
+            
+            // Remove item row
+            $(document).on('click', '.removeItem', function() {
+                $(this).closest('tr').remove();
+                calculateTotals();
+            });
+            
+            // Calculate totals when values change
+            $(document).on('input', '.itemPrice, .itemQty', function() {
+                calculateRowTotal($(this).closest('tr'));
+                calculateTotals();
+            });
+            
+            // Generate bill
+            $('#generateBill').click(function() {
+                generateBill();
+            });
+            
+            // Print bill
+            $('#printBill').click(function() {
+                printBill();
+            });
+            
+            // Add first item row by default
+            addNewItemRow();
+            
+            function addNewItemRow() {
+                itemCounter++;
+                const row = `
+                    <tr id="row${itemCounter}">
+                        <td><input type="text" class="itemName" placeholder="Item name" required></td>
+                        <td><input type="number" class="itemPrice" placeholder="0.00" step="0.01" min="0" required></td>
+                        <td><input type="number" class="itemQty" placeholder="1" min="1" value="1" required></td>
+                        <td class="itemTotal">0.00</td>
+                        <td><button type="button" class="removeItem">Remove</button></td>
+                    </tr>
+                `;
+                $('#itemsBody').append(row);
+            }
+            
+            function calculateRowTotal(row) {
+                const price = parseFloat(row.find('.itemPrice').val()) || 0;
+                const qty = parseInt(row.find('.itemQty').val()) || 0;
+                const total = (price * qty).toFixed(2);
+                row.find('.itemTotal').text(total);
+                return parseFloat(total);
+            }
+            
+            function calculateTotals() {
+                let subtotal = 0;
+                
+                $('#itemsBody tr').each(function() {
+                    subtotal += calculateRowTotal($(this));
+                });
+                
+                const tax = subtotal * 0.18;
+                const total = subtotal + tax;
+                
+                $('#subtotal').text(subtotal.toFixed(2));
+                $('#taxAmount').text(tax.toFixed(2));
+                $('#totalAmount').text(total.toFixed(2));
+            }
+            
+            function generateBill() {
+                // Validate items
+                let valid = true;
+                $('#itemsBody tr').each(function() {
+                    const itemName = $(this).find('.itemName').val();
+                    const price = $(this).find('.itemPrice').val();
+                    const qty = $(this).find('.itemQty').val();
+                    
+                    if (!itemName || !price || !qty) {
+                        valid = false;
+                        return false; // break loop
+                    }
+                });
+                
+                if (!valid) {
+                    alert("Please fill all item details");
+                    return;
+                }
+                
+                const items = [];
+                $('#itemsBody tr').each(function() {
+                    items.push({
+                        productName: $(this).find('.itemName').val(),
+                        price: parseFloat($(this).find('.itemPrice').val()),
+                        quantity: parseInt($(this).find('.itemQty').val())
+                    });
+                });
+                
+                const billData = {
+                    customerName: $('#customerName').val() || "",
+                    customerPhoneNumber: $('#customerPhone').val() || "",
+                    paymentType: $('#paymentType').val(),
+                    orderType: $('#orderType').val(),
+                    items: items
+                };
+                
+                $.ajax({
+                    url: '/api/orders',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(billData),
+                    success: function(response) {
+                        currentBillId = response.orderId;
+                        // Get the text bill
+                        $.get('/api/orders/' + response.orderId + '/text', function(billText) {
+                            $('#billOutput').text(billText);
+                            $('#printBill').prop('disabled', false);
+                            alert("Bill generated successfully!");
+                        });
+                    },
+                    error: function(xhr) {
+                        alert("Error generating bill: " + xhr.responseText);
+                    }
+                });
+            }
+            
+            function initPrinter() {
+                // Initialize QZ Tray printer connection
+                if (typeof qz === 'undefined') {
+                    console.warn("QZ Tray not loaded - printing will be simulated");
+                    return;
+                }
+                
+                qz.websocket.connect()
+                    .then(() => qz.printers.find())
+                    .then(printers => {
+                        console.log("Printers available:", printers);
+                    })
+                    .catch(err => {
+                        console.error("Printer initialization error:", err);
+                    });
+            }
+            
+            function printBill() {
+                if (!currentBillId) {
+                    alert("No bill generated to print");
+                    return;
+                }
+                
+                // Get the latest bill text
+                $.get('/api/orders/' + currentBillId + '/text', function(billText) {
+                    if (typeof qz !== 'undefined') {
+                        // Print using QZ Tray
+                        qz.websocket.connect()
+                            .then(() => qz.printers.find())
+                            .then(printers => {
+                                const config = qz.configs.create(printers[0]); // Use first printer
+                                const data = [billText];
+                                return qz.print(config, data);
+                            })
+                            .then(() => {
+                                alert("Bill sent to printer successfully!");
+                            })
+                            .catch(err => {
+                                console.error("Printing error:", err);
+                                alert("Printing failed: " + err.message);
+                            });
+                    } else {
+                        // Fallback - print in browser
+                        const printWindow = window.open('', '_blank');
+                        printWindow.document.write('<pre>' + billText + '</pre>');
+                        printWindow.document.close();
+                        printWindow.focus();
+                        printWindow.print();
+                        printWindow.close();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

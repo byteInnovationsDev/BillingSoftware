@@ -1,0 +1,185 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100%;
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+ /*background: linear-gradient(135deg, #6c4ab6, #bfa6e1, #6c4ab6); */
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+   background: url('/images/dash.jpg') no-repeat center center fixed;
+  
+  background-size: cover; /* Ensure the image covers the entire background */
+  background-blend-mode: overlay; /* Blend the background image with the gradient */
+  /* background-color: rgba(108, 74, 182, 0.5);*/
+}
+@keyframes gradientBG {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+h1 {
+  color: white;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 4px 10px rgba(208, 185, 185, 0.3);
+   font-family: bavro;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+/* Card */
+.card {
+  position: relative;
+  top:40px;
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 24px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+/* Glass shine moving streak */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: left 0.7s ease;
+}
+
+.card:hover::before {
+  left: 125%;
+}
+
+/* Top-right glowing notch */
+.card::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    circle at 60% 60%,
+    rgba(255, 255, 255, 0.8),
+    transparent 70%
+  );
+  border-radius: 50%;
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Hover effects — scale + 3D rotation + glow */
+.card:hover {
+  transform: scale(1.05) rotateX(3deg) rotateY(-3deg);
+  box-shadow: 0 16px 32px rgba(108, 74, 182, 0.35), 0 0 20px rgba(108, 74, 182, 0.2);
+}
+.card:hover::after {
+  opacity: 1;
+}
+
+.card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+.card:hover .icon {
+  transform: rotate(15deg) scale(1.2);
+}
+
+.card h2 {
+  color: white;
+  margin-bottom: 8px;
+  font-size: 1.4rem;
+}
+.card p {
+  color: white;
+  opacity: 0.85;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+.card button {
+  padding: 10px 16px;
+  border: none;
+  background: #ff007f;
+  color: #030305;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.card button:hover {
+  background: #e7d9f3;
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.8rem; }
+  .cards-container { grid-template-columns: 1fr; }
+}
+
+.card {
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+
+h1 img {
+  max-width: 120px;      /* Adjust size to fit nicely next to heading */
+  height: auto;
+  vertical-align: middle;
+  margin-right: 10px;
+  
+}
+
+@media (max-width: 600px) {
+  h1 img {
+    max-width: 28px;    /* Shrink slightly on smaller screens */
+    margin-right: 8px;
+  }
+}
+html, body {
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+/*   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); */
+  font-family: sans-serif;
+  font-size: 7px ;
+}
