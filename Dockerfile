@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy Maven project files
 COPY . .
 
+# Make mvnw executable (this line fixes the error)
+RUN chmod +x mvnw
+
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
