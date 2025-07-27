@@ -1,3 +1,9 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 /* .container{
 margin-top: 90px;
 margin-left: 30px;
@@ -110,6 +116,7 @@ body {
 .layout {
   display: flex;
   height: 100vh;
+  overflow: hidden;
 }
 h1 img {
   max-width: 40px;      
@@ -175,23 +182,38 @@ h1{
   display: block;
 }
 
-/* Grid Layout */
 .grid-content {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 2.5fr 1.5fr;
+    grid-template-columns: 1fr 2.5fr 1.5fr; /* Desktop layout */
     gap: 20px;
     padding: 32px;
-    margin-top: 10px;
+    margin-top: 27px;
     box-sizing: border-box;
     background-color: #f8f8f9;
-    margin-top: 27px;
+    position: relative;
+}
+
+/* Responsive layout for tablets */
+@media (max-width: 1024px) {
+    .grid-content {
+        grid-template-columns: 1fr 2fr; /* Two columns */
+    }
+}
+
+/* Responsive layout for mobile */
+@media (max-width: 768px) {
+    .grid-content {
+        grid-template-columns: 1fr; /* Stack items vertically */
+        padding: 10%;
+        gap: 16px;
+    }
 }
 
 /* Grid Box Style */
 .grid-box {
   background: white;
-  padding: 24px;
+  padding: 10%;
   border-radius: 16px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
 /*   scrollbar-width: none; */
@@ -293,7 +315,7 @@ h1{
 
 /* Add scrollbar only to the first grid-box */
 .grid-content > section.grid-box:first-child {
-    max-height: 655px;
+       max-height: 688px;
     overflow-y: auto;
 }
 
@@ -416,8 +438,8 @@ h1{
 #amount{
 	
 	position : absolute;
-	right: 83px;
-	top : 497px;
+	right: 65px;
+	top: 464px;
 	font-weight: bolder;
 }
 
@@ -732,4 +754,28 @@ html, body {
 /*   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); */
   font-family: sans-serif;
   font-size: 7px ;
+}
+
+.custom-btn {
+    position: absolute;
+    bottom: 10px;      /* distance from the bottom */
+    right: 10px;       /* distance from the right */
+    padding: 8px 14px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 1000;
+    width: 100px;
+}
+
+.custom-btn.btn1 {
+    left: 5%;
+    
+}
+
+/* Right button */
+.custom-btn.btn2 {
+    right: 5%;
 }

@@ -331,10 +331,10 @@ $(document).on("click", "#billSave", function() {
 		}
 		
 		if(!flag){
-			$('#amount').css('top' , '535px');
+			$('#amount').css('top' , '508px');
 			return false;
 		}else{
-			$('#amount').css('top' , '497px')
+			$('#amount').css('top' , '464px')
 			
 		}
 	
@@ -500,8 +500,4 @@ function toggleSidebar() {
 	});
 
 
-/*	function highlightItem(element) {
-	    const items = document.querySelectorAll('.menu-list li');
-	    items.forEach(item => item.classList.remove('active'));
-	    element.classList.add('active');
-	  }*/
+	
