@@ -173,8 +173,9 @@ html, body {
 }
 
 .footer {
-  position: fixed;
-  bottom: 0;
+  position: fixed; 
+  margin-top : 30px;
+  bottom: 2px;
   left: 0;
   width: 100%;
   text-align: center;
