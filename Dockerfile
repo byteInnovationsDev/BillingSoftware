@@ -1,17 +1,17 @@
-# Use a base JDK image
 FROM eclipse-temurin:17-jdk
 
-# Set working directory
 WORKDIR /app
 
-# Copy Maven project files
+# Copy all project files
 COPY . .
+
+# 🔧 Ensure mvnw has execute permission
+RUN chmod +x ./mvnw
 
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
-# Expose port
 EXPOSE 8080
 
-# Run the JAR
+# Run the final JAR
 CMD ["java", "-jar", "target/BillingSoftware-0.0.1-SNAPSHOT.jar"]
