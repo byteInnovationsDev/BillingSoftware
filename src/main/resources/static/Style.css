@@ -192,6 +192,7 @@ h1{
     box-sizing: border-box;
     background-color: #f8f8f9;
     position: relative;
+    overflow: hidden;
 }
 
 /* Responsive layout for tablets */
@@ -683,8 +684,8 @@ h1{
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   will-change: transform;
   margin-bottom: 15%;
-	padding: 4%;
-	    position: relative;
+  padding: 4%;
+ position: relative;
 	
 }
 
