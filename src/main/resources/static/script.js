@@ -219,6 +219,7 @@ function sanitizeId(str) {
 }
 
 $(document).ready(function () {
+	
 	$(document).off("click", ".add").on("click", ".add", handleClick);
 	$(document).off("click", ".minus").on("click", ".minus", handleClick);
 
@@ -329,14 +330,15 @@ $(document).on("click", "#billSave", function() {
 			flag = true;
 			
 		}
-		
-		if(!flag){
+		var position = $('#totalspan').offset();
+		$('#amount').css('bottom' , position.bottom);
+		/*if(!flag){
 			$('#amount').css('top' , '508px');
 			return false;
 		}else{
 			$('#amount').css('top' , '464px')
 			
-		}
+		}*/
 	
 	const customerInfo = {};
 	$('#TableDiv input[id]').each(function() {

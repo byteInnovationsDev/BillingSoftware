@@ -59,6 +59,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer>{
 
 	 @Query("SELECT COUNT(p.prod_name) FROM Product p  WHERE p.prodParentName = :prodParentName AND p.prod_name = :prod_name ")
 	 int findCountByNameByProdParentName(@Param("prod_name")String prod_name,@Param("prodParentName") String prodParentName);
-		
+	
+	 @Query("SELECT COALESCE(MAX(p.id), 0) FROM Product p")
+	 Integer getMaxProductId();
 	
 }

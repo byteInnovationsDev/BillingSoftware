@@ -19,7 +19,7 @@ $(document).ready(function() {
 		$("section").hide();
 
 		$(".categories").show().css({
-			"width": "300px",
+			"width": "100%",
 		});
 
 		/*$(document).click("sublist",function(){
@@ -36,7 +36,7 @@ $(document).ready(function() {
 				if (length > 0) {
 					$(".categories").hide();
 					$(".product-box").show().css({
-						"width": "300px"
+						"width": "100%"
 					});
 					$(".custom-btn").show()
 					// Add buttons only if not already added
@@ -64,20 +64,25 @@ $(document).ready(function() {
 		       $(".btn1").hide()
 		        $(".product-box").hide();
 		        $(".categories").show().css({
-		            "width": "300px"
+		            "width": "100%"
 		        });
 		    }
 		});
 
 
 		$(document).on("click", "#billbtn", function() {
+			
 			$(".product-box").hide()
 			$(".btn2").hide()
-			$(".categories").hide(); 
+			$(".categories").hide();
+			$('#TableDiv h3').remove(); 
 			$(".billing-form").show().css({
-				"width": "300px",
+				"width": "100%",
 				"overflow": "auto"
 			});
+			var position = $('#totalspan').offset();
+			$('#amount').css('top' , position.top);
+			$('#amount').css('left' , position.left);
 			$(".btn1").show()
 			$(".billing-actions > button").each(function() {
 				var buttonText = $(this).text().trim();

@@ -150,6 +150,9 @@ public class productServiceImpl implements ProductService{
 			}
 			Category c = ser.findByName(categoryName);
 			product.setProdCategoryId(c.getId());
+			
+			Integer maxId = repo.getMaxProductId();
+		    product.setId(maxId + 1);
 			repo.save(product);
 			
 		}

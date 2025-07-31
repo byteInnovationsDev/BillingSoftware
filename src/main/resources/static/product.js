@@ -107,8 +107,8 @@ function editProduct(id) {
 		success: function(data) {
 			$("#editContainer").show();
 			$("#prodname").val(data.product.prod_name);
-			$("#prodcat").val(data.category.name).prop("disabled", true);
-			$("#prodsubcat").val(data.product.prodParentName).prop("disabled", true);
+			$("#prodcat").val(data.category.name).prop("disabled", true).addClass("disabled-cursor");;
+			$("#prodsubcat").val(data.product.prodParentName).prop("disabled", true).addClass("disabled-cursor");;
 			$("#prodprice").val(data.product.price);
 			var status = (data.product.prodDispFlag || '').trim().toUpperCase();
 			$("#prodstatus").val(status);

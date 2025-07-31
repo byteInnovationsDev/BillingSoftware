@@ -213,7 +213,7 @@ h1{
 /* Grid Box Style */
 .grid-box {
   background: white;
-  padding: 10%;
+  padding: 3%;
   border-radius: 16px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
 /*   scrollbar-width: none; */
@@ -267,7 +267,7 @@ h1{
   position: fixed;
   top: 0;
   left: 0;
-  width: 220px;
+  width: 280px;
   height: 100vh;
   background-color: #1a1f36;
   color: white;
@@ -435,11 +435,9 @@ h1{
     padding: 3px;
 }
 
-#amount{
+#printTotal{
 	
-	position : absolute;
-	right: 65px;
-	top: 464px;
+	padding-left: 60%;
 	font-weight: bolder;
 }
 
@@ -533,9 +531,8 @@ h1{
   min-height: 550px;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 14px;
-  margin-top: 4px;
-  padding-top: 22px;
-  padding-left: 15px;
+  padding-top: 10%;
+  padding-left: 15%;
 /*   background: #f4f4f8; */
   border-radius: 16px;
 }
@@ -685,7 +682,10 @@ h1{
   transform: rotateX(0deg) rotateY(0deg);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   will-change: transform;
-  margin-bottom: 47px;
+  margin-bottom: 15%;
+	padding: 4%;
+	    position: relative;
+	
 }
 
 .outOfStock{
@@ -758,7 +758,7 @@ html, body {
 
 .custom-btn {
     position: absolute;
-    bottom: 10px;      /* distance from the bottom */
+    bottom: 5%;      /* distance from the bottom */
     right: 10px;       /* distance from the right */
     padding: 8px 14px;
     background-color: #007bff;
