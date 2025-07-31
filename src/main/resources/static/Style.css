@@ -189,7 +189,7 @@ h1{
     display: grid;
     grid-template-columns: 1fr 2.5fr 1.5fr; /* Desktop layout */
     gap: 20px;
-    padding-top: 10%;
+    margin-top: 10%;
     box-sizing: border-box;
     background-color: #f8f8f9;
     position: relative;
