@@ -24,7 +24,7 @@ $(document).ready(function() {
 			"margin-top": "3%"
 		});
 		$(".quantity-wrapper").css({
-			"margin-left": "8%"
+			"margin-left": "15%"
 		});
 		$("section").hide();
 

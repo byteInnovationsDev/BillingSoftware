@@ -759,7 +759,7 @@ html, body {
 
 .custom-btn {
     position: absolute;
-    bottom: 7%;      /* distance from the bottom */
+    bottom: 4%;      /* distance from the bottom */
     right: 10px;       /* distance from the right */
     padding: 8px 14px;
     background-color: #007bff;
