@@ -15,7 +15,17 @@ $(document).ready(function() {
 
 		// Show mobile-only elements
 		$('.mobile-only').show();
-
+		
+		$(".billing-actions").css({
+			"margin-top": "8%"
+		});
+		
+		$(".grid-box").css({
+			"margin-top": "3%"
+		});
+		$(".quantity-wrapper").css({
+			"margin-left": "8%"
+		});
 		$("section").hide();
 
 		$(".categories").show().css({
@@ -42,8 +52,8 @@ $(document).ready(function() {
 					// Add buttons only if not already added
 					if ($(".grid-content .custom-btn").length === 0) {
 						$(".grid-content").append(`
-			                    <button class="custom-btn btn1" id="catbtn">Button 1</button>
-			                    <button class="custom-btn btn2" id="billbtn">Button 2</button>
+			                    <button class="custom-btn btn1" id="catbtn">Back</button>
+			                    <button class="custom-btn btn2" id="billbtn">Bill</button>
 			                `);
 					}
 				}
@@ -72,34 +82,49 @@ $(document).ready(function() {
 
 		$(document).on("click", "#billbtn", function() {
 			
-			$(".product-box").hide()
-			$(".btn2").hide()
-			$(".categories").hide();
-			$('#TableDiv h3').remove(); 
-			$(".billing-form").show().css({
-				"width": "100%",
-				"overflow": "auto"
-			});
-			var position = $('#totalspan').offset();
-			$('#amount').css('top' , position.top);
-			$('#amount').css('left' , position.left);
-			$(".btn1").show()
-			$(".billing-actions > button").each(function() {
-				var buttonText = $(this).text().trim();
-				var cleanText = buttonText.replace(/^[^a-zA-Z]+/, '');
-
-				// Replace button content with cleaned text
-				$(this).html(cleanText);
-
-				// Apply CSS styling
-				$(this).css({
-					"width": "10%",
-					"height": "90%"
-				});
-			});
-
-
+				const productRows = $('#TableDiv tr');
+					if (productRows.length === 0) {
+					    Swal.fire({
+					        title: 'No Products Added!',
+					        text: 'Please add at least one product before saving the bill.',
+					        icon: 'warning',
+					        timer: 2000,
+					        showConfirmButton: false
+					    });
+					    return false;
+					}
+			
+			else{
+			
+					$(".product-box").hide()
+					$(".btn2").hide()
+					$(".categories").hide();
+					$('#TableDiv h3').remove(); 
+					$(".billing-form").show().css({
+						"width": "100%",
+						"overflow": "auto"
+					});
+					var position = $('#totalspan').offset();
+					$('#amount').css('top' , position.top);
+					$('#amount').css('left' , position.left);
+					$(".btn1").show()
+					$(".billing-actions > button").each(function() {
+						var buttonText = $(this).text().trim();
+						var cleanText = buttonText.replace(/^[^a-zA-Z]+/, '');
+		
+						// Replace button content with cleaned text
+						$(this).html(cleanText);
+		
+						// Apply CSS styling
+						$(this).css({
+							"width": "10%",
+							"height": "90%"
+						});
+					});
+		
+				}
 		});
+		
 	} else {
 		console.log("Desktop device detected.");
 	}
