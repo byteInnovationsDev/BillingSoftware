@@ -17,28 +17,33 @@ $(document).ready(function() {
 		$('.mobile-only').show();
 		
 		$(".billing-actions").css({
-			"margin-top": "8%"
+			"margin-bottom": "5%"
 		});
 		
 		$(".grid-box").css({
-			"margin-top": "3%"
+			"margin-top": "3%",
+			"max-height" : "80%"
 		});
+		
+		$(".product-box").css({
+			"margin-top": "3%",
+			"max-height" : "80%",
+			"overflow-y" : "scroll"
+			
+		});
+		
 		$(".quantity-wrapper").css({
 			"margin-left": "15%"
 		});
+		$(".quantity-container").css({
+			"margin-left": "17%"
+		});
+		
 		$("section").hide();
 
 		$(".categories").show().css({
 			"width": "100%",
 		});
-
-		/*$(document).click("sublist",function(){
-			
-			$(".product-box").show().css({
-							"width": "300px",
-						});
-							
-		});*/
 
 		$(document).on("click", "#sublist, #list", function() {
 			setTimeout(function() {
