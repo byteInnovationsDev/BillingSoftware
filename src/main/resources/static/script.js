@@ -437,7 +437,7 @@ $(document).on("click", "#printBill", function() {
 	});
 	const total = $('#printTotal').text().replace('₹', '').trim();
 	$.ajax({
-		url: '/print/bill/preview',
+		url: '/print/bill',
 		type: 'POST',
 		contentType: 'application/json',
 		data: JSON.stringify({ products, total }),
