@@ -17,7 +17,7 @@ $(document).ready(function() {
 		$('.mobile-only').show();
 		
 		$(".billing-actions").css({
-			"margin-bottom": "5%"
+			"margin-bottom": "0%"
 		});
 		
 		$(".grid-box").css({
