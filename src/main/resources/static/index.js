@@ -4,6 +4,13 @@ $(document).ready(function() {
 		const isSmallScreen = window.innerWidth <= 768; // you can adjust this breakpoint
 		return isMobileUA || isSmallScreen;
 	}
+	
+	
+	if($('#userType').val() !== 'A')
+	{
+		$('.desktop-only').hide();
+	}
+	
 
 	if (isMobileDevice()) {
 

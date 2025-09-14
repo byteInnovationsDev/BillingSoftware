@@ -36,6 +36,9 @@ public class Product {
 	private String category;
 	private String subcategory;
 	
+	@Column(name = "bill_type")
+	private String billType;
+	
 	
 	public String getSubcategory() {
 		return subcategory;
@@ -92,7 +95,12 @@ public class Product {
 		this.prodParentFlag = prodParentFlag;
 	}
 	
-	
+	public String getBillType() {
+		return billType;
+	}
+	public void setBillType(String billType) {
+		this.billType = billType;
+	}
 	public Product() {
 		super();
 		// TODO Auto-generated constructor stub

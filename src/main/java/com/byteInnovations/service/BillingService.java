@@ -15,7 +15,7 @@ public interface BillingService {
 
 	//int getIdByName(String cat_name);
 
-	List<Product> findIdByName(String category);
+	List<Product> findIdByName(String category, String billingType);
 	
 	int findIdByProdName(String product );
 	

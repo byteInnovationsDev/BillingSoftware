@@ -31,11 +31,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.byteInnovations.model.Category;
 import com.byteInnovations.model.Product;
 import com.byteInnovations.model.Purchase;
+import com.byteInnovations.model.User;
 import com.byteInnovations.service.BillingService;
 import com.byteInnovations.service.ProductService;
 import com.byteInnovations.service.PurchaseService;
+import com.byteInnovations.service.UserSessionService;
 import com.byteInnovations.service.productServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ProductController {
@@ -50,20 +56,40 @@ public class ProductController {
 	@Autowired
 	private PurchaseService purchaseSer;
 	
+	@Autowired
+    private UserSessionService userSessionService;
+	
 	@GetMapping("/product")
-	public String home(Model model){
+	public String home(Model model, HttpSession session,  HttpServletResponse response){
 		
-		model.addAttribute("products", pser.findAllByOrderByIdAsc());
+		User user = (User) session.getAttribute("user");
+    	
+    	if (user != null  && user.getUserType().equals("A")) {
+    		model.addAttribute("userName", user.getUserName());
+    		model.addAttribute("userId", user.getUserId());
+    		model.addAttribute("userType", user.getUserType());
+    	} else {
+    	    Long userSessionId = (Long) session.getAttribute("userSessionId");
+    		userSessionService.recordLogout(userSessionId);
+    		session.invalidate();
+    	    response.setHeader("Clear-Site-Data", "\"cache\", \"cookies\", \"storage\", \"executionContexts\"");
+    		return "redirect:/login-page"; 
+    	}
+		
+		String billingType = "DINE";
+		model.addAttribute("products", pser.findAllByOrderByIdAsc(billingType));
 		model.addAttribute("categories", ser.findAll());
 		return "product";
 	}
 	
 	@GetMapping("/getAll")
 	@ResponseBody
-	public Map<String, Object> getAll(){
-		List<Product> product =  pser.findAllByOrderByIdAsc();
+	public Map<String, Object> getAll(HttpServletRequest request){
+		
+		String billingType = request.getParameter("billingType");
+		List<Product> product =  pser.findAllByOrderByIdAsc(billingType);
 	    Map<String, Object> response = new HashMap<>();
-
+	   
 		for(Product p : product)
 		{
 			p.setCategory(ser.findNameById(p.getProdCategoryId()));
@@ -89,39 +115,24 @@ public class ProductController {
 	    return response;
 	}
 	
-	
-	
-	/*
-	 * @PostMapping("/update/products")
-	 * 
-	 * @ResponseBody public ResponseEntity<String> saveProduct(@RequestBody Product
-	 * product) {
-	 * 
-	 * 
-	 * return ResponseEntity.ok("Product saved successfully"); }
-	 */
-	
-	
-
 	@PostMapping("/update/products")
-	public ResponseEntity<?> updateProduct(@RequestBody Map<String, Object> data) {
-
+	public ResponseEntity<?> updateProduct(@RequestBody Map<String, Object> data, HttpServletRequest request) {
+		
+		String billingType = request.getParameter("billingType");
 	    Product product = objectMapper.convertValue(data.get("product"), Product.class);
 	    Category category = objectMapper.convertValue(data.get("category"), Category.class);
-	    pser.updateProduct(product,category);
-	    // Use them as regular objects (save, update, etc.)
+	    pser.updateProduct(product,category, billingType);
 
-	    return ResponseEntity.ok("Deserialized into objects");
+	    return ResponseEntity.ok("done");
 	}
 
 	
 	@PostMapping("/save/products")
-	public ResponseEntity<?> saveProduct(@RequestBody Map<String, Object> data) {
-
+	public ResponseEntity<?> saveProduct(@RequestBody Map<String, Object> data, HttpServletRequest request) {
+		String billingType = request.getParameter("billingType");
 	    Product product = objectMapper.convertValue(data.get("product"), Product.class);
 	    Category category = objectMapper.convertValue(data.get("category"), Category.class);
-	    pser.saveProduct(product,category);
-	    // Use them as regular objects (save, update, etc.)
+	    pser.saveProduct(product,category, billingType);
 
 	    return ResponseEntity.ok("in db");
 	}
@@ -136,15 +147,10 @@ public class ProductController {
 	
 	@GetMapping("/get/productByName/{name}")
 	@ResponseBody
-	public Map<String, Object> search(@PathVariable String name) {
+	public Map<String, Object> search(@PathVariable String name, @RequestParam String billingType) {
 	    Map<String, Object> response = new HashMap<>();
-		/*
-		 * Product product = pser.findById(id); response.put("product", product); String
-		 * catName = ser.findNameById(product.getProdCategoryId()); Category cat = new
-		 * Category(); cat.setId(product.getProdCategoryId()); cat.setName(catName);
-		 * response.put("category", cat);
-		 */
-	    List<Product> product = pser.findByName(name);
+		
+	    List<Product> product = pser.findByName(name, billingType);
 	    
 	    for(Product prod : product) {
 	    	

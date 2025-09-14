@@ -31,10 +31,9 @@ public class BillingServiceImpl implements BillingService {
     private OrderRepository orderRepository;
 
 	@Override
-	public List<Product> findIdByName(String category) {
+	public List<Product> findIdByName(String category, String billType) {
 		
 		Category cat = repo.findByName(category);
-	//	System.out.println("======================"+cat);
 		List<Product> prodList = new ArrayList<>();
 		if(cat.getParentFlag()!=null  && cat.getParentFlag().equalsIgnoreCase("Y"))
 		{
@@ -60,10 +59,9 @@ public class BillingServiceImpl implements BillingService {
 				prodList.add(p);
 			}
 			
-			System.out.println("======================"+prodList);
 		}else {
-			prodList =  prepo.findNameById(cat.getId());
-			//System.out.println("======================"+prodList);
+			
+			prodList =  prepo.findNameByIdType(cat.getId(), billType.toUpperCase());
 		}
 		
 		return prodList;

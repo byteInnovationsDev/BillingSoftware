@@ -12,17 +12,17 @@ public interface ProductService {
 	
 	
 		List<Product> getProdParentNameById(int id);
-		List<Product> getProducts(String product);
+		List<Product> getProducts(String product, String billingType);
 		//List<String> findNameById(int id);
 		List<Product> findAll();
-		List<Product> findAllByOrderByIdAsc();
+		List<Product> findAllByOrderByIdAsc(String billingType);
 		
 		Product findById(int id);
 		
-		void updateProduct(Product p, Category c);
-		void saveProduct(Product product, Category category);
+		void updateProduct(Product p, Category c, String billingType);
+		void saveProduct(Product product, Category category, String billingType);
 		void deleteById(int id);
-		List<Product> findByName(String prod_name);
+		List<Product> findByName(String prod_name, String billingType);
 		
 		//Product findByNameByProdParentName(String prod_name, String prodParentName);
 		

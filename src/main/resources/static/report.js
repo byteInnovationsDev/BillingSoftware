@@ -1,68 +1,67 @@
+$(document).ready(function() {
+  const $reportType = $("#reportType");
+  const $userIdDiv = $("#userIdDiv");
+  const $userId = $("#ReportUserId");
 
+  // Initially hide user div
+  $userIdDiv.hide();
 
+  // Show/hide user div on report type change
+  $reportType.change(function() {
+    if ($(this).val() === "User Login Report") {
+      $userIdDiv.show();
+    } else {
+      $userIdDiv.hide();
+    }
+  });
 
+  // On generate report button click
+  $(document).on("click", "#genreport", function() {
+    const fromdate = $("#FromDate").val();
+    let Todate = $("#ToDate").val();
+    const reportType = $reportType.val();
+    let userIdParam = "";
 
-$(document).on("click", "#genreport", function() {
+    if (!reportType) {
+      alert("Please select report type");
+      return;
+    }
 
+    if (!fromdate) {
+      alert("Please select from date");
+      return;
+    }
 
-	var fromdate = $("#FromDate").val();
-	var Todate = $("#ToDate").val();
+    if (!Todate) {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = ("0" + (today.getMonth() + 1)).slice(-2);
+      const day = ("0" + today.getDate()).slice(-2);
+      Todate = `${year}-${month}-${day}`;
+    }
 
-	var reportType = $("#reportType").val();
-	$('#saveLoader').show();
-	$('.layout').addClass("blur");
-	if (!reportType) {
-		Swal.fire({
-			title: 'Report Type is Empty!',
-			text: 'Please Select The Report Type',
-			icon: "warning",
-			timer: 1500,
-			showConfirmButton: false
-		});
-		$('#saveLoader').hide();
-		$('.layout').removeClass("blur");
-		return;
+    if (reportType === "User Login Report") {
+      const selectedUserId = $userId.val();
+      if (!selectedUserId) {
+        alert("Please select user");
+        return;
+      }
+      userIdParam = `&userId=${encodeURIComponent(selectedUserId)}`;
+    }
 
-	}
+    const url = `/genReports?reporttype=${encodeURIComponent(reportType)}&fromdate=${encodeURIComponent(fromdate)}&todate=${encodeURIComponent(Todate)}${userIdParam}`;
 
-	else if (!fromdate) {
-		Swal.fire({
-			title: 'From Date is Empty!',
-			text: 'Please Select The From Date',
-			icon: "warning",
-			timer: 1500,
-			showConfirmButton: false
-		});
-		$('#saveLoader').hide();
-		$('.layout').removeClass("blur");
-		return;
-
-	}
-	else if (!Todate) {
-		const today = new Date();
-		const year = today.getFullYear();
-		const month = String(today.getMonth() + 1).padStart(2, '0');
-		const day = String(today.getDate()).padStart(2, '0');
-		Todate = `${year}-${month}-${day}`;
-
-	}
-
-	const url = `/genReports?reporttype=${encodeURIComponent(reportType)}&fromdate=${encodeURIComponent(fromdate)}&todate=${encodeURIComponent(Todate)}`;
-
-	fetch(url)
-		.then(response => response.blob())
-		.then(blob => {
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement('a');
-			$('#saveLoader').hide();
-			$('.layout').removeClass("blur");
-			a.href = url;
-			a.download = "report.xlsx";
-			document.body.appendChild(a);
-			a.click();
-			a.remove();
-		})
-		.catch(() => alert("Something went wrong."));
+    fetch(url)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "report.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      })
+      .catch(() => alert("Something went wrong."));
+  });
 });
-
-

@@ -14,11 +14,10 @@ import com.byteInnovations.model.Report;
 import com.byteInnovations.repository.OrderRepository;
 import com.byteInnovations.repository.PurchaseRepository;
 import com.byteInnovations.repository.ReportRepository;
+import com.byteInnovations.repository.UserSessionRepository;
 
 @Service
 public class ReportServiceImpl implements ReportService {
-
-    private final HomeController homeController;
 
 	@Autowired
 	private ReportRepository repo;
@@ -26,10 +25,6 @@ public class ReportServiceImpl implements ReportService {
 	private OrderRepository orepo;
 	@Autowired
 	private PurchaseRepository prepo;
-
-    ReportServiceImpl(HomeController homeController) {
-        this.homeController = homeController;
-    }
 
 	@Override
 	public List<Report> findByDesc(String desc) {

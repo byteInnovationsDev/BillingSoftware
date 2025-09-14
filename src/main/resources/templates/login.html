@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+ <link rel="stylesheet" href="login.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="login.js"></script>
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="loginForm" action="login" method="post">
+      <div class="input-group">
+        <label for="username">User Id</label>
+        <input type="text" id="userId" placeholder="Enter user id" ><span id="useridSpan"></span>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="userPassword" placeholder="Enter password" ><span id="userPasswordSpan"></span>
+      </div>
+      <button type="submit" class="login-btn" id="login">Login</button>
+     
+
+    </form>
+  </div>
+</body>
+</html>

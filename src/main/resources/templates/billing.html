@@ -10,20 +10,23 @@
     <link rel="stylesheet" href="/Style.css" />
 </head>
 <body>
-   
+<input type="hidden" id="userId" th:value="${userId}">
+<input type="hidden" id="userName" th:value="${userName}">
+<input type="hidden" id="userType" th:value="${userType}">
 
   <div class="layout">
-<button id="toggleBtn" class="toggle-btn desktop-only" onclick="toggleSidebar()">☰</button>
+<button id="toggleBtn" class="toggle-btn" onclick="toggleSidebar()">☰</button>
 <aside id="sidebarOverlay" class="sidebar-overlay desktop-only">
   <button class="close-btn" onclick="toggleSidebar()">×</button>
 
   <div class="sidebar-content">
     <h1><img src="images/Waffle N.png" alt=""> Waffle N'Fries </h1>
     <nav class="nav-links">
-      <a href="/">🏠 Dashboard</a>
+      <a href="/index">🏠 Dashboard</a>
        <a href="/reports">📊 Report</a>
       <a href="/product">📦 Inventory</a>
-     <!--  <a href="settings.html">⚙️ Settings</a> -->
+      <a href="/user">📦 Users</a>
+      <a href="/logout">Log Out</a>
     </nav>
   </div>
 </aside>
@@ -49,10 +52,10 @@
 	
       <!-- Grid 2: Quantity Buttons -->
       <section class="grid-box product-box" id="prodContainer">
-      <!-- <div id="prodlist"></div> -->
+      
       <div class="quantity-wrapper" id="prodlist" >
     <div class="quantity-heading">
-
+	
     </div>
     <div class="quantity-note">
     </div>
@@ -61,14 +64,7 @@
 	
     	<div id="prodData" style = "display : none;"></div>	
 </section>
-      <!-- <h3>Quantity Controls</h3> -->
-   	
-   <!-- <div class="quantity-container">
-	 		
-	       <button class="qty-btn">-</button>
-	      <span id="qtyDisplay" class="quantity-display">0</span>
-	      <button class="qty-btn">+</button>
-     </div> -->
+
 
       <!-- Grid 3: Billing Form -->
       <section class="grid-box billing-form" id = "TableDiv">
@@ -84,7 +80,6 @@
   <select id = "orderType">
     <option value="s" disabled selected>&nbsp&nbspSelect</option>
     <option value="Dine-In">Dine-In</option>
-    <option value="Takeaway">Takeaway</option>
     <option value="Delivery">Delivery</option>
   </select>
  <span id="orderTypeSpan"></span>
@@ -96,16 +91,9 @@
     <option value="Card">Card</option>
   </select>
   <span id="paymentTypeSpan"></span>
-  <!-- <div id = "total"> -->
-     <!-- <span >TOTAL</span><span id="totalPrice"></span>
-      <div id="printItems"></div>
-				 <hr> -->
-<!-- 	 <div style="text-align: right; font-weight: bold;">
- -->	      <br><p><span style="font-weight: bold;" id="totalspan">TOTAL</span><span id="printTotal">0.00</span></p>
- 				<div id="amount"> </div>
-	<!--     </div>
-	</div> -->
-   <!-- </div> -->
+  <br><p><span style="font-weight: bold;" id="totalspan">TOTAL</span><span id="printTotal">0.00</span></p>
+  <div id="amount"> </div>
+
 
   <div class="billing-actions">
     <button class="save-btn" id="billSave">💾 Save</button>
@@ -116,39 +104,22 @@
 </section>
 
     </main>
+    
   </div>
-
+  <div id="billTypeDiv" style="display:none;">
+  		<div class="billType" data-code="dine">
+  			<img alt="" src="images/dinner.png">
+  			<span>Dine In</span>
+  		</div>
+  		<div class="billType" data-code="del">
+  			<img alt="" src="images/food-delivery.png">
+  			<span>Delivery</span>
+  		</div>
+  </div>
   
-
          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js" type="text/javascript"></script>
     
-<!-- <script>
-  let quantity = 0;
 
-  function increaseQty() {
-    quantity++;
-    document.getElementById("qtyDisplay").textContent = quantity;
-  }
-
-  function decreaseQty() {
-    if (quantity > 0) {
-      quantity--;
-      document.getElementById("qtyDisplay").textContent = quantity;
-    }
-  }
-
-  function toggleSidebar() {
-    const sidebar = document.getElementById("sidebarOverlay");
-    const backdrop = document.getElementById("overlayBackdrop");
-    const toggleBtn = document.getElementById("toggleBtn");
-
-    sidebar.classList.toggle("show");
-    backdrop.classList.toggle("show");
-
-    // Hide toggle button when sidebar is open
-    toggleBtn.style.display = sidebar.classList.contains("show") ? "none" : "block";
-  }
-</script>  -->
 </body>
 </html>

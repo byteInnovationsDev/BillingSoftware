@@ -9,18 +9,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
+<input type="hidden" id="userId" th:value="${userId}">
+<input type="hidden" id="userName" th:value="${userName}">
+<input type="hidden" id="userType" th:value="${userType}">
  <div class="layout">
     <!-- Sidebar -->
     <aside class="sidebar">
       <h1><img src="/images/Waffle N.png" alt="waffle image"> Waffle N'Fries </h1>
       <nav class="nav-links">
-        <a href="/">🏠 Dashboard</a>
+        <a href="/index">🏠 Dashboard</a>
         <a href="/billing">💵 Billing</a>
         <a href="/product">📦 Inventory</a>
+        <a href="/user">📦 Users</a>
+     	<a href="/logout">Log Out</a>
       </nav>
-      <!-- <div class="settings-link">
-        <a href="settings.html">⚙️ Settings</a>
-      </div> -->
     </aside>
 
   <div class="main">
@@ -33,9 +35,18 @@
           <option value="Sales Report">Sales Report</option>
           <option value="Product Wise Report">Product Wise Report Monthly</option>
           <option value="Expense Report">Expense Report</option>
+          <option value="User Login Report">User Login Report</option>
         </select>
       </div>
-
+	 <div class="form-control" id="userIdDiv" style="display:none;">
+	    <label for="userId">User</label>
+	    <select id="ReportUserId" name="ReportUserId">
+	        <option value="" disabled selected>Select User</option>
+	        <th:block th:each="u : ${usersList}">
+	            <option th:value="${u.userId}" th:text="${u.userFullName}">User Name</option>
+	        </th:block>
+	    </select>
+	</div>
       <div class="form-control">
         <label for="dateFrom">📅 From</label>
         <input type="date" id="FromDate">

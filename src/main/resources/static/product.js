@@ -1,3 +1,5 @@
+let billingType = 'DEL';
+
 $(document).ready(function() {
 
 	$("#uploadcontainer").hide();
@@ -9,12 +11,12 @@ $(document).ready(function() {
 
 			$.ajax({
 				method: "GET",
-				url: "/getAll",
+				url: "/getAll?billingType="+billingType.toUpperCase(),
 				success: function(data) {
 					if (data.product && data.product.length > 0) {
-
+						let serialNo = 1;
 						$.each(data.product, function(index, product) {
-							let serialNo = index + 1;
+							
 
 							let statusRaw = (product.prodDispFlag || '').trim().toUpperCase();
 							let stockStatus = statusRaw === "Y" ? "In Stock" : "Out of Stock";
@@ -28,6 +30,7 @@ $(document).ready(function() {
 							tr.append(`<td><button class="icon-btn edit-btn" onclick="editProduct('${product.id}')">Edit</button></td>`);
 							tr.append(`<td><button class="icon-btn delete-btn" onclick="deleteProduct('${product.id}')">Delete</button></td>`);
 							$("#tableBody").append(tr);
+							serialNo++;
 						});
 					}
 				}
@@ -36,14 +39,13 @@ $(document).ready(function() {
 		else {
 			$.ajax({
 				method: "GET",
-				url: "/get/productByName/" + value,
+				url: "/get/productByName/" + value  + "?billingType="+billingType.toUpperCase(),
 				success: function(data) {
 					$("#tableBody").empty();
 					$("#empty").hide();
 					if (data.product && data.product.length > 0) {
-
+						let serialNo = 1;
 						$.each(data.product, function(index, product) {
-							let serialNo = index + 1;
 
 							let statusRaw = (product.prodDispFlag || '').trim().toUpperCase();
 							let stockStatus = statusRaw === "Y" ? "In Stock" : "Out of Stock";
@@ -57,6 +59,7 @@ $(document).ready(function() {
 							tr.append(`<td><button class="icon-btn edit-btn" onclick="editProduct('${product.id}')">Edit</button></td>`);
 							tr.append(`<td><button class="icon-btn delete-btn" onclick="deleteProduct('${product.id}')">Delete</button></td>`);
 							$("#tableBody").append(tr);
+							serialNo++;
 						});
 					}
 					else {
@@ -225,7 +228,7 @@ if ($("#prodcat").is(":disabled")) {
 
 			$.ajax({
 				method: "POST",
-				url: "/update/products",
+				url: "/update/products?billingType="+billingType.toUpperCase(),
 				contentType: "application/json",
 				data: JSON.stringify(fullData),
 				success: function(data) {
@@ -260,7 +263,7 @@ if ($("#prodcat").is(":disabled")) {
 
 			$.ajax({
 				method: "POST",
-				url: "/save/products",
+				url: "/save/products?billingType="+billingType.toUpperCase(),
 				contentType: "application/json",
 				data: JSON.stringify(fullData),
 				success: function(data) {
@@ -461,14 +464,6 @@ function uploadFile(file, endpoint) {
 				}
 			}
 
-			/* if (res.messages && res.messages.length > 0) {
-				 html += '<div class="alert alert-warning"><ul>';
-				 res.messages.forEach(msg => {
-					 html += '<li>' + msg + '</li>';
-				 });
-				 html += '</ul></div>';
-			 }*/
-
 			$('#response').append(html);
 
 		},
@@ -541,73 +536,50 @@ function downloadExcel() {
 
 
 $('input[type="text"]').on('keyup', function(e) {
-	// Convert input to uppercase
-	$(this).val($(this).val().toUpperCase());
+
+		$(this).val($(this).val().toUpperCase());
 });
 
-
-
-/*$('.uploadBtn').click(function () {
-	const fileInput = $(this).closest('.upload-section').find('input[type="file"]');
-	const file = fileInput[0].files[0];
-	const responseDiv = $(this).closest('.upload-section').find('.response');
-
-	if (!file) {
-		responseDiv.text("Please select a file first.");
-		return;
-	}
-
-	const formData = new FormData();
-	formData.append("file", file);
-
+$(document).on('click','.ProdType', function(){
+	$('#searchid').val('');
+	billingType = $(this).data('type');
+	
 	$.ajax({
-		url: "/upload/purchase",
-		type: "POST",
-		data: formData,
-		contentType: false,
-		processData: false,
-		success: function (res) {
-			responseDiv.text("Upload successful: " + res);
-		},
-		error: function (xhr) {
-			responseDiv.text("Upload failed: " + xhr.responseText);
-		}
-	});
-});
+			method: "GET",
+			url: "/getAll?billingType="+billingType.toUpperCase(),
+			success: function(data) {
+				$("#tableBody").empty();
+				$("#empty").hide();
+				if (data.product && data.product.length > 0) {
+					let serialNo = 1;
+					$.each(data.product, function(index, product) {
 
+						let statusRaw = (product.prodDispFlag || '').trim().toUpperCase();
+						let stockStatus = statusRaw === "Y" ? "In Stock" : "Out of Stock";
 
-function uploadFile(file, endpoint, responseDiv) {
-	const formData = new FormData();
-	formData.append("file", file);
-
-	$.ajax({
-		url: endpoint,
-		type: "POST",
-		data: formData,
-		contentType: false,
-		processData: false,
-		success: function (response) {
-			responseDiv.html('<div class="alert alert-success">Upload successful:<br>' + response + '</div>');
-		},
-		error: function (xhr) {
-			try {
-				const errors = JSON.parse(xhr.responseText);
-				if (Array.isArray(errors)) {
-					let html = '<div class="alert alert-danger"><strong>Upload failed due to the following errors:</strong><ul>';
-					errors.forEach(function (error) {
-						html += '<li>' + error + '</li>';
+						let tr = $('<tr></tr>');
+						tr.append(`<td>${serialNo}</td>`);
+						tr.append(`<td>${product.prod_name}</td>`);
+						tr.append(`<td>${product.category || '-'}</td>`);
+						tr.append(`<td>${product.price}</td>`);
+						tr.append(`<td>${stockStatus}</td>`);
+						tr.append(`<td><button class="icon-btn edit-btn" onclick="editProduct('${product.id}')">Edit</button></td>`);
+						tr.append(`<td><button class="icon-btn delete-btn" onclick="deleteProduct('${product.id}')">Delete</button></td>`);
+						$("#tableBody").append(tr);
+						serialNo++;
 					});
-					html += '</ul></div>';
-					responseDiv.html(html);
-				} else {
-					responseDiv.html('<div class="alert alert-danger">' + xhr.responseText + '</div>');
 				}
-			} catch (e) {
-				responseDiv.html('<div class="alert alert-danger">Upload failed: ' + xhr.responseText + '</div>');
+				else {
+
+					$("#empty").show();
+
+				}
 			}
-		}
-	});
+		});
+	
+});
+
+function setActive(button) {
+  document.querySelectorAll('.d-btn').forEach(btn => btn.classList.remove('active'));
+  button.classList.add('active');
 }
-
-
-*/

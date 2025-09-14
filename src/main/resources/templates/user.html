@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Waffle Billing page</title>
+ 
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="user.js"></script>
+    <link rel="stylesheet" href="/Admin.css" />
+    <link rel="stylesheet" href="/Style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+</head>
+<style>
+span
+{
+	color : red;
+	display : none;
+}
+
+</style>
+<body>
+	<aside id="sidebarOverlay" class="sidebar-overlay desktop-only show">
+	
+	  <div class="sidebar-content">
+	    <h1><img src="images/Waffle N.png" alt=""> Waffle N'Fries </h1>
+	    <nav class="nav-links">
+	      <a href="/index">🏠 Dashboard</a>
+	       <a href="/reports">📊 Report</a>
+	      <a href="/product">📦 Inventory</a>
+	      <a href="/logout">Log Out</a>
+	    </nav>
+	  </div>
+	</aside>
+	
+	<main class="inventory-area">
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+			
+			<h1><i class="fas fa-users" style="color: #a8d0ff;"></i> Users</h1>
+			<p>Manage user accounts, roles, and activity with ease.</p>
+
+			
+	</main>
+	
+	<div class="search-container">
+				<input type="text" id="searchInput" placeholder="Search">
+	</div>
+	
+	<div class="user-card">
+	
+	<div id="userTableDiv" class="table-scroll">
+		<table id="userTable" class="user-table">
+		<thead>
+			<tr><th>User Id</th>
+			<th>User Name</th>
+			<th>User Type</th>
+			<th>Edit</th>
+			<th>Delete</th>
+		</thead>
+		<tbody>
+			  <tr th:each="user : ${users}">
+                    <td style="padding-left: 38px;" th:text="${user.userId}"></td>
+                    <td th:text="${user.userName}"></td>
+                    <td th:text="${user.userType == 'U' ? 'User' : user.userType}"></td>
+                    <td><button class="editUsr icon-btn edit-btn"  th:data-code="${user.userId}" ><i class="fas fa-pen"></i></button></td>
+                    <td><button class="deleteUsr icon-btn delete-btn"  th:data-code="${user.userId}" ><i class="fas fa-trash"></i></button></td>
+                </tr>
+		</tbody>
+		</table>
+	</div>
+	</div>
+	  <div class="button-container">
+    	<button id="AddUsr" class="icon-btn add-btn">+ Add New Users</button>
+  	</div>
+  	
+
+			
+		<div class="sheet-popup" id="popupSheet">
+			<div id="heading"></div>
+ 			<button class="close-btn">✖</button>
+			
+			<div class="form-container" id="EditTableDiv">
+				<form>
+					<div class="form-group">
+						<label for="userId">User Id</label> <input type="text"
+							id="userId" />
+							<span class="userIdSpan">Enter User Id </span>
+					</div>
+					<div class="form-group">
+						<label for="userName">User Name</label> <input type="text"
+							id="userName" />
+							<span class="userNameSpan">Enter User Name</span>
+					</div>
+					<div class="form-group">
+						<label for="userFullName">Full Name</label> <input type="text"
+							id="userFullName" />
+							<span class="userFullNameSpan">Enter Full Name</span>
+					</div>
+					<div class="form-group">
+						<label for="userPassword">Password</label> <input type="password"
+							id="userPassword" />
+							<span class="userPasswordSpan">Enter Password</span>
+					</div>
+					<div class="form-group">
+						<label for="status">User Type</label> <select id="userType">
+							<option value="" selected disabled>Select</option>
+							<option value="U">User</option>
+						</select>
+						<span class="userTypeSpan">Enter User Type</span>
+					</div>
+					
+					<div class="form-actions">
+						<button id="savebtn">Save</button>
+					</div>
+				</form>
+			</div>
+			
+		</div>
+		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>

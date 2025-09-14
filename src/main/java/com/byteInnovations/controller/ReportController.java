@@ -9,6 +9,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,32 +30,68 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.byteInnovations.dto.UserLoginReportDTO;
 import com.byteInnovations.model.OrderClass;
 import com.byteInnovations.model.Purchase;
 import com.byteInnovations.model.Report;
+import com.byteInnovations.model.User;
+import com.byteInnovations.model.UserSession;
 import com.byteInnovations.service.PurchaseServiceImpl;
 import com.byteInnovations.service.ReportService;
+import com.byteInnovations.service.UserService;
+import com.byteInnovations.service.UserSessionService;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ReportController {
+
+    private final PrintController printController;
 
 	@Autowired
 	private PurchaseServiceImpl purchaseSer;
 	@Autowired
 	private ReportService ser;
+	@Autowired
+	private UserSessionService userSer;
+	@Autowired
+	private UserService userService;
+
+    ReportController(PrintController printController) {
+        this.printController = printController;
+    }
 
 	@GetMapping("/reports")
-	public String home() {
+	public String home(Model model, HttpSession session,  HttpServletResponse response) {
+		User user = (User) session.getAttribute("user");
+    	
+    	if (user != null && user.getUserType().equals("A")) {
+    		model.addAttribute("userName", user.getUserName());
+    		model.addAttribute("userId", user.getUserId());
+    		model.addAttribute("userType", user.getUserType());
+    		
+    		List<User> usersList = userService.getUsersList();  // Inject UserService in controller
+            model.addAttribute("usersList", usersList);
+    	} else {
+    		Long userSessionId = (Long) session.getAttribute("userSessionId");
+    		userSer.recordLogout(userSessionId);
+    		session.invalidate();
+    	    response.setHeader("Clear-Site-Data", "\"cache\", \"cookies\", \"storage\", \"executionContexts\"");
 
+    		return "redirect:/login-page"; 
+    	}
+    	
 		return "report";
 	}
 
 	@GetMapping("/genReports")
 	public ResponseEntity<byte[]> exportExcel(@RequestParam(required = false) String reporttype,
-			@RequestParam(required = false) LocalDate fromdate, @RequestParam(required = false) LocalDate todate) {
+			@RequestParam(required = false) LocalDate fromdate, @RequestParam(required = false) LocalDate todate,  @RequestParam(required = false) Long userId) {
 
 		List<Report> reportHeader = ser.findByDesc(reporttype);
 		try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -212,7 +249,7 @@ public class ReportController {
 				cell1.setCellStyle(headerStyle);
 				row.setHeightInPoints(20);
 
-			} else if ("PRODUCT WISE REPORT".equalsIgnoreCase(reporttype)) {
+			} else if ("PRODUCT WISE REPORT".equalsIgnoreCase(reporttype) ) {
 
 				YearMonth startMonth = YearMonth.from(fromdate);
 				YearMonth endMonth = YearMonth.from(todate);
@@ -308,7 +345,7 @@ public class ReportController {
 
 					sheet.setColumnWidth(2, 5000);
 					Cell cell2 = row.createCell(2);
-					cell2.setCellValue(purchase.getPurchaseDate().format(formatter)); // e.g., "16-Jun-2025"
+					cell2.setCellValue(purchase.getPurchaseDate().format(formatter));
 					cell2.setCellStyle(dataCellStyle);
 					sheet.setColumnWidth(3, 3000);
 					Cell cell3 = row.createCell(3);
@@ -330,6 +367,62 @@ public class ReportController {
 				cell1.setCellValue("RS. "+cost);
 				cell1.setCellStyle(headerStyle);
 				row.setHeightInPoints(25);
+			} else if ("USER LOGIN REPORT".equalsIgnoreCase(reporttype)) {
+				/*
+				 * List<UserLoginReportDTO> report = userSer.getUserLoginReport(userId,
+				 * fromdate, todate); int userIdInt = userId.intValue(); Optional<User> userOpt
+				 * = userService.getUserById(userIdInt); User u = userOpt.get(); rowIdx = 1;
+				 * 
+				 * for (UserLoginReportDTO dto : report) { Row row = sheet.createRow(rowIdx++);
+				 * 
+				 * sheet.setColumnWidth(0, 11000); Cell cell0 = row.createCell(0);
+				 * cell0.setCellValue(u.getUserFullName()); cell0.setCellStyle(dataCellStyle);
+				 * 
+				 * sheet.setColumnWidth(1, 8000); Cell cell1 = row.createCell(1);
+				 * cell1.setCellValue(dto.getSessionDate().toString());
+				 * cell1.setCellStyle(dataCellStyle);
+				 * 
+				 * sheet.setColumnWidth(2, 8000); Cell cell2 = row.createCell(2);
+				 * cell2.setCellValue(dto.getTotalHours()); cell2.setCellStyle(dataCellStyle);
+				 * 
+				 * row.setHeightInPoints(25);
+				 * 
+				 * }
+				 */
+				
+				List<UserLoginReportDTO> report = userSer.getUserLoginReport(userId, fromdate, todate);
+			    int userIdInt = userId.intValue();
+			    Optional<User> userOpt = userService.getUserById(userIdInt);
+
+			    if (userOpt.isPresent()) {
+			        User u = userOpt.get();
+
+			        // Set wider column widths
+			        sheet.setColumnWidth(0, 8000); // User Name
+			        sheet.setColumnWidth(1, 10000); // Session Date
+			        sheet.setColumnWidth(2, 8000);  // Total Hours
+
+			        rowIdx = 1; // start from row 1 or wherever your header/data starts
+
+			        for (UserLoginReportDTO dto : report) {
+			            Row row = sheet.createRow(rowIdx++);
+
+			            Cell cell0 = row.createCell(0);
+			            cell0.setCellValue(u.getUserFullName());
+			            cell0.setCellStyle(dataCellStyle);
+
+			            Cell cell1 = row.createCell(1);
+			            cell1.setCellValue(dto.getSessionDate().toString());
+			            cell1.setCellStyle(dataCellStyle);
+
+			            Cell cell2 = row.createCell(2);
+			            cell2.setCellValue(dto.getTotalHours());
+			            cell2.setCellStyle(dataCellStyle);
+
+			            row.setHeightInPoints(25);
+			        }
+			    }
+
 			}
 
 			workbook.write(out);
@@ -342,23 +435,5 @@ public class ReportController {
 			return ResponseEntity.internalServerError().build();
 		}
 	}
-
-	/*
-	 * List<OrderClass> reportList =
-	 * ser.findOrdersBetweenDatesGroupByProduct(fromdate, todate);
-	 * 
-	 * for (OrderClass order : reportList) { Row row = sheet.createRow(rowIdx++);
-	 * row.createCell(0).setCellValue(order.getProductName());
-	 * row.createCell(1).setCellValue(order.getCategory());
-	 * row.createCell(2).setCellValue(order.getSubCategory());
-	 * row.createCell(3).setCellValue(order.getQuantity());
-	 * row.createCell(4).setCellValue(order.getPrice().doubleValue()); total =
-	 * total.add(order.getPrice()); row.setHeightInPoints(20); } rowIdx += 1; Row
-	 * row = sheet.createRow(rowIdx); Cell cell = row.createCell(3);
-	 * cell.setCellValue("TOTAL"); cell.setCellStyle(headerStyle); Cell cell1 =
-	 * row.createCell(4); cell1.setCellValue(total.doubleValue());
-	 * cell1.setCellStyle(headerStyle1);
-	 * 
-	 */
 
 }

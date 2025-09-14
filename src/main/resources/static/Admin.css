@@ -1,0 +1,372 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #2d2d2d;
+  display: flex;
+  flex-direction : column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+
+.user-card {
+  background: #fff;
+  padding: 20px;
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  min-height: 600px;
+  max-width: 70%;
+  position: absolute;
+  top: 15%;
+  left: 22%;
+}
+
+
+
+.icon-btn {
+  padding: 8px 14px;
+  background-color: #e1eaff;
+  color: #264b96;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.icon-btn:hover {
+  background-color: #c2d4ff;
+}
+
+
+
+
+.add-btn {
+  padding: 12px 24px;
+  background-color: #735cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+  
+}
+
+.add-btn:hover {
+  background-color: #5a4edc;
+} 
+
+.button-container {
+      position: absolute;
+    bottom: 4%;
+    left : 50%;
+}
+  
+
+.popup {
+  display: none;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 400px;
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+.table-scroll {
+  max-height: 500px; /*  any height you want */
+  overflow-y: auto;
+}
+
+
+/*  Popup for edit and additem  */
+.sheet-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100vh;
+  background: #f5f7fa;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 32px;
+  overflow-y: auto;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  transition: transform 0.3s ease;
+}
+
+.sheet-popup.show {
+  display: block;
+}
+
+.sheet-popup h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+}
+
+.sheet-popup .close-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: black;
+}
+
+/* for that sheet */
+.form-container {
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px;
+  border-radius: 20px;
+
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 24px rgba(100, 100, 111, 0.2);
+  animation: fadeUp 0.8s ease;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+} 
+
+/* Entry Animation */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+ .form-container .form-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  
+}
+
+.form-container label {
+  flex: 1;
+  min-width: 140px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #3a3a3a;
+  padding: 12px;
+  transition: color 0.3s ease;
+}
+
+.form-container input,
+.form-container select {
+  flex: 2;
+  min-width: 200px;
+  padding: 14px;
+  border: 1px solid #d5d7e0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #ffffff;
+  box-shadow: inset 2px 2px 6px rgba(255,255,255,0.8),
+              inset -2px -2px 6px rgba(0,0,0,0.03);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #735cff;
+  box-shadow: 0 0 10px rgba(115, 92, 255, 0.2);
+  outline: none;
+}
+
+.form-container .form-actions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.form-container button {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #735cff, #a78bfa);
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(115, 92, 255, 0.2);
+}
+
+.form-container button:hover {
+  background: white;
+  color: #735cff;
+  border: 1px solid #735cff;
+  transform: scale(1.05);
+  box-shadow: 0 10px 24px rgba(115, 92, 255, 0.25);
+}
+
+.form-container button:active {
+  animation: pulse 0.3s ease;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+  
+
+/*  Glassmorphism  */
+.form-container {
+background: rgba(255, 255, 255, 0.1); 
+backdrop-filter: blur(10px);         
+border: 1px solid rgba(255, 255, 255, 0.2); 
+box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
+
+}
+
+
+.form-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 22px;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.4), rgba(115, 92, 255, 0.2));
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+.form-container input,
+.form-container select {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(115, 92, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: inset 1px 1px 3px rgba(255,255,255,0.4),
+              inset -1px -1px 3px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+
+.form-container input:focus,
+.form-container select:focus {
+  border-color: #a78bfa;
+  background-color: rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 0 0 3px rgba(115, 92, 255, 0.1),
+    0 0 12px rgba(115, 92, 255, 0.25);
+}
+
+
+.form-container input::placeholder,
+.form-container select::placeholder {
+  color: rgba(90, 90, 90, 0.6);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.form-container input:focus::placeholder,
+.form-container select:focus::placeholder {
+  opacity: 0;
+  transform: translateX(6px);
+}
+
+.form-container input:hover,
+.form-container select:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: #ccc;
+}  
+
+
+
+/* hover effect for tr */
+
+.user-table {
+  width: 99.5%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.user-table thead {
+   background: #f0f0f0;
+  color: white;
+  
+  
+} 
+.user-table th {
+ background: #f2f4f8;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  color: #444;
+}
+
+
+.user-table tbody tr {
+  transition: all 0.25s ease;
+}
+
+.user-table tbody tr:hover {
+ background: linear-gradient(135deg, #e0f0ff, #f3d9ff, #fde4f7, #fff0f5);
+  transform: scale(1.01);
+  box-shadow: 0 2px 10px rgba(115, 92, 255, 0.1);
+  cursor: pointer;
+}
+
+.search-container {
+    position: absolute;
+    top: 10%;
+    right: 8%;
+
+}
+
+.search-container input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 250px;
+  outline: none;
+  transition: border 0.3s ease;
+}
+
+.search-container input:focus {
+  border-color: #735cff;
+}
+
+.inventory-area{
+	position: absolute;
+    top: 2%;
+    left: 47%;
+}
+}

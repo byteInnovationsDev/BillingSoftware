@@ -32,8 +32,8 @@ h1 {
 .cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 24px;
-  max-width: 840px;
+  gap: 14px;
+  max-width: 1042px;
   margin: 0 auto;
 }
 

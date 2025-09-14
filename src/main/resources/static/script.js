@@ -2,6 +2,9 @@
 let category;
 let subCategory;
 let isBillSaved = false;
+let billingType;
+let isAdmin = null;
+
 $(document).on("click", "#list li", function() {
 	category = $(this).text();
 	const items = document.querySelectorAll('.menu-list li');
@@ -11,7 +14,7 @@ $(document).on("click", "#list li", function() {
 	$("#prodData").empty();
 	$.ajax({
 		method: "GET",
-		url: "/get/product/" + category,
+		url: "/get/product/" + category + "?billingType="+billingType,
 		success: function(data) {
 			
 			$('#prodlist').empty();
@@ -117,7 +120,7 @@ $(document).on("click", "#sublist li", function() {
 	$("#prodData").empty();
 	$.ajax({
 		method: "GET",
-		url: "/get/productsByName/" + subCategory,
+		url: "/get/productsByName/" + subCategory + "?billingType="+billingType,
 		success: function(data) {
 			$.each(data, function(_, val) {
 				
@@ -490,7 +493,6 @@ function toggleSidebar() {
 	                window.location.href = targetHref;
 					
 	            } else {
-	                // 🔧 Fix stuck blur — forcibly reset body class and remove overlay
 					toggleSidebar()
 	                $('body').removeClass('swal2-shown');
 	                $('html').removeClass('swal2-shown');
@@ -501,5 +503,47 @@ function toggleSidebar() {
 	    }
 	});
 
+	
+$(document).ready(function(){
+	
+	if($('#userType').val() == "A")
+	{
+		$('#toggleBtn').show();
+		isAdmin = true;
+	}else{
+		$('#toggleBtn').hide();
+	}	
+	
+	$("#billTypeDiv").show();
+	$('#billTypeDiv').addClass('active');
+	
+	if(isAdmin)
+	{
+		$('#toggleBtn').css({
+		    'display': 'block',    
+		    'opacity': '0'      
+		});
+	}
+	
+});
+
+$('.billType').on('click', function(){
+	billingType = $(this).data('code');
+	$('#billTypeDiv').removeClass('active');
+	if(isAdmin)
+	{
+		$('#toggleBtn').css({
+		    'opacity': '1',
+		    'filter': 'none'
+		});	
+	}
+	
+	if(billingType == 'dine')
+	{
+		$('#orderType').val('Dine-In').attr('disabled', true);
+		}else if(billingType == 'del'){
+		$('#orderType').val('Delivery').attr('disabled', true);
+	}
+});
 
 	

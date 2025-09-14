@@ -30,24 +30,21 @@ public class productServiceImpl implements ProductService{
 	public List<Product> getProdParentNameById(int id) {
 
 		List<Product> prodParentNames =  repo.findDistinctProdParentNamesById(id);
-		//Set<String> distinctNames = new HashSet<>(prodParentNames);
-
 		return prodParentNames;
 	}
 
-
 	@Override
-	public List<Product> getProducts(String product) {
+	public List<Product> getProducts(String product, String billingType) {
 		
 		List<Product> productList = new ArrayList<>();
 		int id = ser.findIdByProdName(product);
 		
 		 if(id!= 0 ){
 			 
-		 productList = repo.findNameById(id);
+		 productList = repo.findNameByIdType(id, billingType.toUpperCase());
 			 
 		 }else {
-			 productList = repo.findNameByProdParentName(product);
+			 productList = repo.findNameByProdParentName(product, billingType.toUpperCase());
 		 }
 		
 		return productList;
@@ -56,16 +53,15 @@ public class productServiceImpl implements ProductService{
 
 	@Override
 	public List<Product> findAll() {
-		
 		return repo.findAll();
 	}
 
 
 	@Override
-	public List<Product> findAllByOrderByIdAsc() {
-		return repo.findAllByOrderByIdAsc();
+	public List<Product> findAllByOrderByIdAsc(String billingType) {
+		List<Product> list = repo.findAllByOrderByIdAsc(billingType);
+		return list;
 	}
-
 
 	@Override
 	public Product findById(int id) {
@@ -77,7 +73,7 @@ public class productServiceImpl implements ProductService{
 
 		@Override
 	 	@Transactional
-	    public void updateProduct(Product p, Category c) {
+	    public void updateProduct(Product p, Category c, String billingType) {
 
 		Product product = new Product();
 		Product prod = new Product();
@@ -105,8 +101,6 @@ public class productServiceImpl implements ProductService{
 			String prodParentName = "NA";
 			product.setProdParentFlag("N");
 			product.setProdParentName(prodParentName);
-			//prod = repo.findByNameByProdParentName(prodName,prodParentName );
-			/* product.setId(prod.getId()); */
 		}
 		
 		
@@ -117,16 +111,13 @@ public class productServiceImpl implements ProductService{
 		        product.getProdParentName(),
 		        product.getPrice(),
 		        product.getProdDispFlag(),
-		        product.getProdCategoryId()
+		        product.getProdCategoryId(),
+		        billingType
 		    );
-		
-		
-		
 	}
 
-
 		@Override
-		public void saveProduct(Product product, Category category) {
+		public void saveProduct(Product product, Category category, String billingType) {
 			
 			String categoryName = category.getName();
 			
@@ -150,35 +141,29 @@ public class productServiceImpl implements ProductService{
 			}
 			Category c = ser.findByName(categoryName);
 			product.setProdCategoryId(c.getId());
-			
 			Integer maxId = repo.getMaxProductId();
 		    product.setId(maxId + 1);
+		    product.setBillType(billingType);
 			repo.save(product);
 			
 		}
 
-
 		@Override
 		public void deleteById(int id) {
-			
 			repo.deleteAllById(id);
-			
 		}
-
 
 		@Override
-		public List<Product> findByName(String prod_name) {
+		public List<Product> findByName(String prod_name, String billType) {
 
-			return repo.findByName(prod_name);
+			return repo.findByName(prod_name, billType);
 		}
-
 
 		@Override
 		public boolean checkCategoryProduct(Product product) {
 			System.out.println("++++++++++++++++++++++"+product);
 			String prodName = product.getProd_name();
 			String prodParentName = product.getSubcategory();
-			//System.out.println(prodName+prodParentName);
 			int prodCount = repo.findCountByNameByProdParentName(prodName,prodParentName);
 			int catCount = ser.findCountByName(product.getCategory());
 			System.out.println("=================="+prodCount);
@@ -189,10 +174,5 @@ public class productServiceImpl implements ProductService{
 			}
 
 			return false;
-		}
-	
-	
-		
-	
-	
+		}	
 }
